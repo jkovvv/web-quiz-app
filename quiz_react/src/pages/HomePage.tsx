@@ -13,6 +13,8 @@ interface Quiz {
 const HomePage = () => {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [funFact, setFunFact] = useState<string>("");
+
   const navigate = useNavigate();
 
   const onQuizSelect = (quiz: Quiz) => {
@@ -33,7 +35,24 @@ const HomePage = () => {
       }
     };
 
+    const fetchFunFact = async () => {
+      try {
+        const response = await fetch(
+          "https://uselessfacts.jsph.pl/random.json?language=en"
+        );
+        const data = await response.json();
+        const translatedFunFact = data.text.replace(
+          "fun fact",
+          "zanimljiva činjenica"
+        ); // Jednostavan prevod
+        setFunFact(translatedFunFact);
+      } catch (error) {
+        console.error("Error fetching fun fact:", error);
+      }
+    };
+
     fetchData();
+    fetchFunFact();
   }, []);
 
   const handleButtonClick = () => {
@@ -57,12 +76,22 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-8 text-center">
+
+        <div className="col-md-6 text-center">
           <div className="card">
             <div className="card-body">
               <h1 className="display-4">Dobrodošli u kviz!</h1>
               <p className="lead">Testirajte svoje znanje!</p>
               <Button onClick={handleButtonClick}>Započni kviz!</Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body text-center">
+              <h5 className="card-title">Zanimljiva Činjenica</h5>
+              <p className="card-text">{funFact}</p>
             </div>
           </div>
         </div>
