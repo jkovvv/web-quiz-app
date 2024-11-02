@@ -1,8 +1,9 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
+import axios from "axios";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -19,8 +20,15 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const login = () => setIsAuthenticated(true);
-  const logout = () => setIsAuthenticated(false);
+  const login = (token: string) => {
+    setIsAuthenticated(true);
+    localStorage.setItem("authToken", token);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("authToken");
+  };
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>

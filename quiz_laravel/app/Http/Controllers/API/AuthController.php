@@ -16,7 +16,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8'
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:user,creator'
         ]);
 
         if($validator->fails()){
@@ -26,12 +27,14 @@ class AuthController extends Controller
         $user = User::create([
             'name'=> $request->name,
             'email'=> $request->email,
+            'role' => $request->role,
             'password'=> Hash::make($request->password)
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['data'=> $user, 'access_token'=> $token, 'token_type'=> 'Bearer']);
+        //return response()->json(['data'=> $user, 'access_token'=> $token, 'token_type'=> 'Bearer']);
+        return response()->json(['token' => $token]);
     }
 
     public function login(Request $request)
@@ -43,7 +46,8 @@ class AuthController extends Controller
         $user = User::where('email', $request['email'])->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['data'=> $user, 'access_token'=> $token, 'token_type'=> 'Bearer']);
+        //return response()->json(['data'=> $user, 'access_token'=> $token, 'token_type'=> 'Bearer']);
+        return response()->json(['token' => $token]);
     }
 
     public function logout(Request $request)
