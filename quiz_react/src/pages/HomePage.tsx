@@ -41,11 +41,7 @@ const HomePage = () => {
           "https://uselessfacts.jsph.pl/random.json?language=en"
         );
         const data = await response.json();
-        const translatedFunFact = data.text.replace(
-          "fun fact",
-          "zanimljiva činjenica"
-        ); // Jednostavan prevod
-        setFunFact(translatedFunFact);
+        setFunFact(data.text);
       } catch (error) {
         console.error("Error fetching fun fact:", error);
       }
@@ -86,7 +82,9 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+      </div>
 
+      <div className="row">
         <div className="col-md-4">
           <div className="card">
             <div className="card-body text-center">
