@@ -31,7 +31,9 @@ Route::get('/show-all-quiz-attempts/{quiz}/{user}', [QuizAttemptController::clas
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
-Route::get('/user', [UserController::class, 'show']);
+
+Route::middleware('auth:api')->get('/user', [UserController::class, 'user']);
+
 
 Route::middleware('role:creator')->group(function () {
     //Question related routes

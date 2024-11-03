@@ -23,13 +23,13 @@ const LoginPage = () => {
         });
 
         const token = response.data.token;
-        console.log("Token:", token);
+        const userResponse = await axios.get("http://localhost:8000/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-        const userResponse = await axios.get("http://localhost:8000/api/user");
         const userData = userResponse.data;
-
         console.log("User data:", userData);
 
         login(token);
@@ -53,8 +53,21 @@ const LoginPage = () => {
           password: registerPassword,
           role: role,
         });
-        console.log("Odgovor servera:", response.data);
         alert("Uspešno ste se registrovali!");
+
+        const token = response.data.token;
+
+        const userResponse = await axios.get("http://localhost:8000/api/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const userData = userResponse.data;
+        console.log("User data:", userData);
+
+        console.log("Token:", token);
+        login(token);
         navigate("/");
       } catch (error) {
         console.error(
