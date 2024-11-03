@@ -33,7 +33,7 @@ const LoginPage = () => {
         console.log("User data:", userData);
 
         login(token);
-        navigate("/");
+        navigate("/", { state: { user: userData } });
       } catch (error) {
         console.error(
           "Greška prilikom prijave:",
@@ -68,7 +68,7 @@ const LoginPage = () => {
 
         console.log("Token:", token);
         login(token);
-        navigate("/");
+        navigate("/", { state: { user: userData } });
       } catch (error) {
         console.error(
           "Greška prilikom registracije:",

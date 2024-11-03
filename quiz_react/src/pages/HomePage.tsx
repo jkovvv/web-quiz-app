@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import Button from "../components/Button.tsx";
 import QuizList from "../components/QuizList.tsx";
@@ -16,6 +16,9 @@ const HomePage = () => {
   const [funFact, setFunFact] = useState<string>("");
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const user = location.state?.user;
 
   const onQuizSelect = (quiz: Quiz) => {
     setSelectedQuiz(quiz);
@@ -54,7 +57,7 @@ const HomePage = () => {
   const handleButtonClick = () => {
     if (selectedQuiz) {
       console.log(`Odabran je:`, selectedQuiz);
-      navigate("/quiz", { state: { selectedQuiz } });
+      navigate("/quiz", { state: { selectedQuiz, user } });
     } else {
       console.log("Niste izabrali kviz");
     }

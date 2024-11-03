@@ -28,7 +28,7 @@ const QuizPage = () => {
   const timerRef = useRef<TimerHandle | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const { selectedQuiz } = location.state || { selectedQuiz: null };
+  const { selectedQuiz, user } = location.state || {};
 
   useEffect(() => {
     if (selectedQuiz && selectedQuiz.all_questions) {
@@ -61,6 +61,8 @@ const QuizPage = () => {
               ? timerRef.current.getTimeLeft()
               : 0),
           maxPoints: maxPoints + 5000,
+          user,
+          selectedQuiz,
         },
       });
     }
