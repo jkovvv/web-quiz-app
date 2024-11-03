@@ -25,7 +25,7 @@ const ResultsPage = () => {
         score: normalizedScore,
       });
       console.log("Quiz attempt saved successfully!");
-      navigate("/");
+      navigate("/", { state: { selectedQuiz, user } });
     } catch (error) {
       console.error("Error saving quiz attempt:", error);
     }

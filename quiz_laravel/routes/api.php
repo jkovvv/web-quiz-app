@@ -28,6 +28,7 @@ Route::get('/show-all-quizzes', [QuizController::class, 'readAll']);
 Route::post('/create-quiz-attempt', [QuizAttemptController::class, 'create']);
 Route::get('/show-last-quiz-attempt/{quiz}/{user}', [QuizAttemptController::class, 'readLast']);
 Route::get('/show-all-quiz-attempts/{quiz}/{user}', [QuizAttemptController::class, 'readAll']);
+Route::get('/show-all-quiz-attempts-from-user/{user}', [QuizAttemptController::class, 'readAllFromUser']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');

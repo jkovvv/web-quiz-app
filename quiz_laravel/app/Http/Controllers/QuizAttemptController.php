@@ -46,6 +46,19 @@ class QuizAttemptController extends Controller
         return response()->json($quizAttempts);
     }
 
+    public function readAllFromUser($user_id)
+    {
+        $quizAttempts = QuizAttempt::with('quiz')->where('user_id', $user_id)->get();
+
+        if ($quizAttempts->isEmpty()) {
+            return response()->json([
+                'message' => 'No quiz attempts found for the given user.'
+            ], 404);
+        }
+
+        return response()->json($quizAttempts, 200);
+    }
+
 
     public function update(Request $request, $attempt_id)
     {

@@ -10,13 +10,22 @@ interface Quiz {
   description: string;
 }
 
+interface QuizAttempt {
+  id: number;
+  quiz_id: number;
+  user_id: number;
+  score: number;
+  created_at: string;
+  quiz: Quiz;
+}
+
 const HomePage = () => {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [funFact, setFunFact] = useState<string>("");
+  const [quizAttempts, setQuizAttempts] = useState<QuizAttempt[]>([]);
 
   const navigate = useNavigate();
-
   const location = useLocation();
   const user = location.state?.user;
 
@@ -50,9 +59,25 @@ const HomePage = () => {
       }
     };
 
+    const fetchQuizAttempts = async () => {
+      if (user) {
+        try {
+          const response = await fetch(
+            `http://localhost:8000/api/show-all-quiz-attempts-from-user/${user.id}`
+          );
+          const data = await response.json();
+          const reversedAttempts = data.reverse();
+          setQuizAttempts(reversedAttempts);
+        } catch (error) {
+          console.error("Error fetching quiz attempts:", error);
+        }
+      }
+    };
+
     fetchData();
     fetchFunFact();
-  }, []);
+    fetchQuizAttempts();
+  }, [user]);
 
   const handleButtonClick = () => {
     if (selectedQuiz) {
@@ -93,6 +118,36 @@ const HomePage = () => {
             <div className="card-body text-center">
               <h5 className="card-title">Zanimljiva Činjenica</h5>
               <p className="card-text">{funFact}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-4">
+          <div className="card">
+            <div className="card-body text-center">
+              <h5 className="card-title">Moji Pokušaji Kvizova</h5>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Kviz ID</th>
+                    <th>Rezultat</th>
+                    <th>Datum</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {quizAttempts.map((attempt) => (
+                    <tr key={attempt.id}>
+                      <td>{attempt.quiz.title}</td>
+                      <td>{attempt.score}</td>
+                      <td>
+                        {new Date(attempt.created_at).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
