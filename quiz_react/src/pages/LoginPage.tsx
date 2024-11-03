@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -20,7 +21,17 @@ const LoginPage = () => {
           email: username,
           password: password,
         });
+
         const token = response.data.token;
+        console.log("Token:", token);
+
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        const userResponse = await axios.get("http://localhost:8000/api/user");
+        const userData = userResponse.data;
+
+        console.log("User data:", userData);
+
         login(token);
         navigate("/");
       } catch (error) {
@@ -58,7 +69,6 @@ const LoginPage = () => {
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
-        {/* Login kartica */}
         <div className="col-md-6 text-center">
           <div className="card">
             <div className="card-body">
@@ -87,7 +97,6 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Register kartica */}
         <div className="col-md-6 text-center">
           <div className="card">
             <div className="card-body">

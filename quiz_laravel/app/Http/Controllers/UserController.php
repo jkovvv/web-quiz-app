@@ -11,4 +11,18 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function get($id)
+    {
+        $question = User::find($id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found']);
+        }
+
+        return response()->json($user);
+    }
+    public function show()
+    {
+        return response()->json(Auth::user());
+    }
 }

@@ -41,10 +41,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-    ],
+        'api' => [
+            'driver' => 'sanctum', // ili 'passport' ako koristiš Passport
+            'provider' => 'users',
+        ],
+],
 
     'api' => [
-        'driver' => 'token',
+        'driver' => 'passport',
         'provider' => 'users',
     ],
 
