@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../components/Button.tsx";
 import QuizList from "../components/QuizList.tsx";
+import { saveAs } from "file-saver";
+import Papa from "papaparse";
 
 interface Quiz {
   id: number;
@@ -114,6 +116,18 @@ const HomePage = () => {
     }
   };
 
+  const handleExport = () => {
+    const csvData = quizAttempts.map((attempt) => ({
+      Quiz: attempt.quiz.title,
+      Score: attempt.score,
+      Date: new Date(attempt.created_at).toLocaleDateString(),
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, "quiz_attempts.csv");
+  };
+
   return (
     <div className="container mt-5">
       <div className="row">
@@ -192,6 +206,7 @@ const HomePage = () => {
                   Sledeća
                 </button>
               </div>
+              <Button onClick={handleExport}>Ekspotuj u .csv fajl</Button>
             </div>
           </div>
         </div>
