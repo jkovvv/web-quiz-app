@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 
-// Define the structure of a quiz object
 interface Quiz {
   id: number;
   title: string;
-  description: string; // Add other properties as needed
+  description: string;
 }
 
 interface Props {
-  items: Quiz[]; // Change to accept an array of Quiz objects
-  onSelectItem: (item: Quiz) => void; // Change to accept a Quiz object
+  items: Quiz[];
+  onSelectItem: (item: Quiz) => void;
 }
 
 const QuizList: React.FC<Props> = ({ items, onSelectItem }) => {
@@ -17,7 +16,7 @@ const QuizList: React.FC<Props> = ({ items, onSelectItem }) => {
 
   return (
     <>
-      <h1>Kvizovi</h1>
+      <h3 className="text-center">Kvizovi</h3>
       {items.length === 0 && <p>No item found</p>}
       <ul className="list-group">
         {items.map((quiz, index) => (
@@ -27,13 +26,13 @@ const QuizList: React.FC<Props> = ({ items, onSelectItem }) => {
                 ? "list-group-item active"
                 : "list-group-item"
             }
-            key={quiz.id} // Use a unique key for each quiz
+            key={quiz.id}
             onClick={() => {
               setSelectedIndex(index);
-              onSelectItem(quiz); // Pass the entire quiz object
+              onSelectItem(quiz);
             }}
           >
-            {quiz.title} {/* Display the quiz title */}
+            {quiz.title}
           </li>
         ))}
       </ul>

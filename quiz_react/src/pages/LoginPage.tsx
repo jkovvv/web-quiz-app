@@ -23,6 +23,7 @@ const LoginPage = () => {
         });
 
         const token = response.data.token;
+        console.log(token);
         const userResponse = await axios.get("http://localhost:8000/api/user", {
           headers: {
             Authorization: `Bearer ${token}`,

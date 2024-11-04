@@ -48,7 +48,10 @@ class QuizAttemptController extends Controller
 
     public function readAllFromUser($user_id)
     {
-        $quizAttempts = QuizAttempt::with('quiz')->where('user_id', $user_id)->get();
+        $quizAttempts = QuizAttempt::with('quiz')
+            ->where('user_id', $user_id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5); 
 
         if ($quizAttempts->isEmpty()) {
             return response()->json([
@@ -58,7 +61,6 @@ class QuizAttemptController extends Controller
 
         return response()->json($quizAttempts, 200);
     }
-
 
     public function update(Request $request, $attempt_id)
     {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import Button from "../components/Button.tsx";
 import QuizList from "../components/QuizList.tsx";
 
@@ -24,6 +23,8 @@ const HomePage = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
   const [funFact, setFunFact] = useState<string>("");
   const [quizAttempts, setQuizAttempts] = useState<QuizAttempt[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,15 +60,15 @@ const HomePage = () => {
       }
     };
 
-    const fetchQuizAttempts = async () => {
+    const fetchQuizAttempts = async (page = 1) => {
       if (user) {
         try {
           const response = await fetch(
-            `http://localhost:8000/api/show-all-quiz-attempts-from-user/${user.id}`
+            `http://localhost:8000/api/show-all-quiz-attempts-from-user/${user.id}?page=${page}`
           );
           const data = await response.json();
-          const reversedAttempts = data.reverse();
-          setQuizAttempts(reversedAttempts);
+          setQuizAttempts(data.data);
+          setTotalPages(data.last_page);
         } catch (error) {
           console.error("Error fetching quiz attempts:", error);
         }
@@ -76,8 +77,8 @@ const HomePage = () => {
 
     fetchData();
     fetchFunFact();
-    fetchQuizAttempts();
-  }, [user]);
+    fetchQuizAttempts(currentPage);
+  }, [user, currentPage]);
 
   const handleButtonClick = () => {
     if (selectedQuiz) {
@@ -85,6 +86,18 @@ const HomePage = () => {
       navigate("/quiz", { state: { selectedQuiz, user } });
     } else {
       console.log("Niste izabrali kviz");
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
@@ -112,7 +125,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="row">
+      <div className="row mt-4">
         <div className="col-md-4">
           <div className="card">
             <div className="card-body text-center">
@@ -121,17 +134,15 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <div className="card">
             <div className="card-body text-center">
               <h5 className="card-title">Moji Pokušaji Kvizova</h5>
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Kviz ID</th>
+                    <th>Kviz</th>
                     <th>Rezultat</th>
                     <th>Datum</th>
                   </tr>
@@ -148,6 +159,26 @@ const HomePage = () => {
                   ))}
                 </tbody>
               </table>
+
+              <div className="d-flex justify-content-between mt-3">
+                <button
+                  className="btn btn-secondary"
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  Prethodna
+                </button>
+                <span>
+                  Stranica {currentPage} od {totalPages}
+                </span>
+                <button
+                  className="btn btn-secondary"
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  Sledeća
+                </button>
+              </div>
             </div>
           </div>
         </div>
