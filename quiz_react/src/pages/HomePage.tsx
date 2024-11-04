@@ -36,27 +36,39 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:8000/api/show-all-quizzes"
-        );
-        const data = await response.json();
-        const quizzes = Array.isArray(data) ? data : [data];
-        setQuizzes(quizzes);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      const cachedQuizzes = localStorage.getItem("quizzes");
+      if (cachedQuizzes) {
+        setQuizzes(JSON.parse(cachedQuizzes));
+      } else {
+        try {
+          const response = await fetch(
+            "http://localhost:8000/api/show-all-quizzes"
+          );
+          const data = await response.json();
+          const quizzes = Array.isArray(data) ? data : [data];
+          setQuizzes(quizzes);
+          localStorage.setItem("quizzes", JSON.stringify(quizzes));
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
 
     const fetchFunFact = async () => {
-      try {
-        const response = await fetch(
-          "https://uselessfacts.jsph.pl/random.json?language=en"
-        );
-        const data = await response.json();
-        setFunFact(data.text);
-      } catch (error) {
-        console.error("Error fetching fun fact:", error);
+      const cachedFunFact = localStorage.getItem("funFact");
+      if (cachedFunFact) {
+        setFunFact(cachedFunFact);
+      } else {
+        try {
+          const response = await fetch(
+            "https://uselessfacts.jsph.pl/random.json?language=en"
+          );
+          const data = await response.json();
+          setFunFact(data.text);
+          localStorage.setItem("funFact", data.text);
+        } catch (error) {
+          console.error("Error fetching fun fact:", error);
+        }
       }
     };
 
@@ -82,6 +94,7 @@ const HomePage = () => {
 
   const handleButtonClick = () => {
     if (selectedQuiz) {
+      localStorage.removeItem("funFact");
       console.log(`Odabran je:`, selectedQuiz);
       navigate("/quiz", { state: { selectedQuiz, user } });
     } else {
@@ -162,7 +175,7 @@ const HomePage = () => {
 
               <div className="d-flex justify-content-between mt-3">
                 <button
-                  className="btn btn-secondary"
+                  className="btn btn-primary"
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
                 >
@@ -172,7 +185,7 @@ const HomePage = () => {
                   Stranica {currentPage} od {totalPages}
                 </span>
                 <button
-                  className="btn btn-secondary"
+                  className="btn btn-primary"
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
                 >
