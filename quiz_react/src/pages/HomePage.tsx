@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, resolvePath } from "react-router-dom";
 import Button from "../components/Button.tsx";
 import QuizList from "../components/QuizList.tsx";
-import { saveAs } from "file-saver";
+import saveAs from "file-saver";
 import Papa from "papaparse";
+import axios from "axios";
 
 interface Quiz {
   id: number;
@@ -43,11 +44,12 @@ const HomePage = () => {
         setQuizzes(JSON.parse(cachedQuizzes));
       } else {
         try {
-          const response = await fetch(
+          const response = await axios.get(
             "http://localhost:8000/api/show-all-quizzes"
           );
-          const data = await response.json();
-          const quizzes = Array.isArray(data) ? data : [data];
+          const quizzes = Array.isArray(response.data)
+            ? response.data
+            : [response.data];
           setQuizzes(quizzes);
           localStorage.setItem("quizzes", JSON.stringify(quizzes));
         } catch (error) {
@@ -66,8 +68,9 @@ const HomePage = () => {
             "https://uselessfacts.jsph.pl/random.json?language=en"
           );
           const data = await response.json();
-          setFunFact(data.text);
-          localStorage.setItem("funFact", data.text);
+          const funFactText = data.text;
+          setFunFact(funFactText);
+          localStorage.setItem("funFact", funFactText);
         } catch (error) {
           console.error("Error fetching fun fact:", error);
         }
@@ -77,12 +80,11 @@ const HomePage = () => {
     const fetchQuizAttempts = async (page = 1) => {
       if (user) {
         try {
-          const response = await fetch(
+          const response = await axios.get(
             `http://localhost:8000/api/show-all-quiz-attempts-from-user/${user.id}?page=${page}`
           );
-          const data = await response.json();
-          setQuizAttempts(data.data);
-          setTotalPages(data.last_page);
+          setQuizAttempts(response.data.data);
+          setTotalPages(response.data.last_page);
         } catch (error) {
           console.error("Error fetching quiz attempts:", error);
         }
@@ -178,9 +180,16 @@ const HomePage = () => {
                   {quizAttempts.map((attempt) => (
                     <tr key={attempt.id}>
                       <td>{attempt.quiz.title}</td>
-                      <td>{attempt.score}</td>
+                      <td>{attempt.score}%</td>
                       <td>
-                        {new Date(attempt.created_at).toLocaleDateString()}
+                        {new Date(attempt.created_at).toLocaleDateString(
+                          "sr-RS",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -206,7 +215,15 @@ const HomePage = () => {
                   Sledeća
                 </button>
               </div>
-              <Button onClick={handleExport}>Ekspotuj u .csv fajl</Button>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleExport();
+                }}
+              >
+                Export to .csv format
+              </a>
             </div>
           </div>
         </div>
