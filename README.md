@@ -3,10 +3,10 @@ Quiz App
 Ova aplikacija omogućava korisnicima učestvovanje u kvizovima, pregled pokušaja i rezultata, dok kreatori kvizova mogu dodavati nove kvizove i pitanja.
 Tehnologije korišćene u projektu
 
-    Frontend: React.js (React Router za navigaciju, Axios za HTTP zahteve)
-    Backend: Laravel (REST API za upravljanje kvizovima i korisničkim podacima)
-    Baza podataka: MySQL
-    Alati za razvoj: Git, GitHub
+Frontend: React.js (React Router za navigaciju, Axios za HTTP zahteve)
+Backend: Laravel (REST API za upravljanje kvizovima i korisničkim podacima)
+Baza podataka: MySQL
+Alati za razvoj: Git, GitHub
 
 Pokretanje projekta na lokalnoj mašini
 Zahtevi
@@ -18,31 +18,31 @@ Zahtevi
 Instalacija i pokretanje
 Backend (Laravel)
 
-    Kloniraj repozitorijum:
+Kloniraj repozitorijum:
 
-git clone <URL_TVOG_REPOZITORIJUMA>
-cd naziv-laravel-foldera
+    git clone https://github.com/jkovvv/web-quiz-app.git
+    cd quiz_laravel
 
 Instaliraj PHP zavisnosti:
 
-composer install
+    composer install
 
 Kreiraj .env fajl i unesi konfiguraciju baze podataka:
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=ime_baze
-DB_USERNAME=username
-DB_PASSWORD=password
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=ime_baze
+    DB_USERNAME=username
+    DB_PASSWORD=password
 
 Generiši aplikacijski ključ:
 
-php artisan key:generate
+    php artisan key:generate
 
 Pokreni migracije za bazu podataka:
 
-php artisan migrate
+    php artisan migrate
 
 Pokreni backend server:
 
@@ -52,11 +52,11 @@ Frontend (React)
 
     Uđi u React folder:
 
-cd naziv-react-foldera
+    cd quiz_react
 
 Instaliraj JavaScript zavisnosti:
 
-npm install
+    npm install
 
 Konfiguriši axios.defaults.baseURL u app.js ili index.js fajlu tako da odgovara tvom lokalnom Laravel serveru (obično http://127.0.0.1:8000).
 Pokreni frontend server:
