@@ -32,7 +32,7 @@ Kreiraj .env fajl i unesi konfiguraciju baze podataka:
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
     DB_PORT=3306
-    DB_DATABASE=ime_baze
+    DB_DATABASE=laravelquiz
     DB_USERNAME=username
     DB_PASSWORD=password
 
